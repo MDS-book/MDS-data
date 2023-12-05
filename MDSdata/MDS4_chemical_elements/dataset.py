@@ -44,7 +44,7 @@ def pandas_data():
     """
     df = pd.read_csv(p)
     #df.columns = features
-    return df, df.columns
+    return df #, df.columns
 
 
 def numpy_data():
@@ -60,7 +60,7 @@ def numpy_data():
     http://dx.doi.org/10.1016/j.eq.2016.04.007
 
     """
-    df, features = pandas_data()
+    df = pandas_data()
     feature_names = ['atomic_radius', 'electron_affinity', 'ionization energy', 'electronegativity']
     X = np.array(df[feature_names])
     y = np.array(df[['metallic']]).flatten()
@@ -88,7 +88,8 @@ def data(pandas=False):
     """    
     if pandas:
         return pandas_data()
-    return numpy_data()
+    else:
+        return numpy_data()
 
 
 def main():
