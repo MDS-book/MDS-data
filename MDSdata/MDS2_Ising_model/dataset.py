@@ -21,8 +21,8 @@ above the Curie temperature (1).
 # a wrong relative path is resolved and reading a file from within this
 # script does not work properly. You can see this with
 # `print(os.path.dirname(os.path.abspath(__file__)))`
-p = join(os.path.dirname(os.path.abspath(__file__)), 'images_16.zip')
-p2 = join(os.path.dirname(os.path.abspath(__file__)), 'labels_16.csv')
+p = join(os.path.dirname(os.path.abspath(__file__)), 'images_64.zip')
+p2 = join(os.path.dirname(os.path.abspath(__file__)), 'labels_64.csv')
 
 
 

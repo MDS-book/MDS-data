@@ -1,12 +1,12 @@
 import matplotlib.pyplot as plt
-from MDSdata import MDS2_light
+from MDSdata import MDS2
 
-""" Usage of the MDS-dataset 'MDS-2_light: Ising model'
+""" Usage of the MDS-dataset 'MDS-2: Ising model'
 
 This script contains some examples for how to
-use the MDS-dataset 'MDS-2 (light): Ising Model'. The images
+use the MDS-dataset 'MDS-2: Ising Model'. The images
 are stored in a ZIP archive and will be extracted to a list
-of numpy arrays. There are 5000 images of 16x16 pixels in size.
+of numpy arrays. There are 5000 images of 64x64 pixels in size.
 
 For further information and reference to the source of the 
 data please refer to the MDS-book.
