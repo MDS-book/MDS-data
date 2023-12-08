@@ -59,17 +59,19 @@ def read_images_from_zip_archive(zip_filename):
     return list_of_image_arrays, list_of_filenames
 
 
-def get_images_temperatures_and_labels(zip_filename, csv_filename):
-    print("Reading zip archive: ", zip_filename)
+def get_images_temperatures_and_labels(zip_filename, csv_filename, verbose):
+    if verbose:
+        print("- Reading zip archive from the location:\n ", zip_filename)
     assert_that_zip_archive_contains_only_files(zip_filename)
 
     images, filenames = read_images_from_zip_archive(zip_filename)
     shape = images[0].shape
     n_images = len(images)
 
-    print(f"Extracted {n_images} images with {shape[0]} x {shape[1]} pixel.")
+    if verbose:
+        print(f"- Extracted {n_images} images with {shape[0]} x {shape[1]} pixel.")
+        print("- Reading temperatures and labels from CSV file:\n ", csv_filename)
 
-    print("Reading temperatures and labels from CSV file: ", csv_filename)
     csv_dataset = pd.read_csv(csv_filename)
     csv_filenames = csv_dataset['filenames']
 

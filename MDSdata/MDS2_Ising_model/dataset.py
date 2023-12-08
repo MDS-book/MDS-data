@@ -26,17 +26,25 @@ p2 = join(os.path.dirname(os.path.abspath(__file__)), 'labels_64.csv')
 
 
 
-def data():
-    images, temperatures, labels = \
-        get_images_temperatures_and_labels(
-            zip_filename=p, 
-            csv_filename=p2
-        )
-    return images, temperatures, labels
+
+class MDS2:
+    def __init__(self) -> None:
+        pass 
+
+    @staticmethod
+    def data(verbose=False) -> (list, list, list):
+        images, temperatures, labels = \
+            get_images_temperatures_and_labels(
+                zip_filename=p, 
+                csv_filename=p2,
+                verbose=verbose
+            )
+        return images, temperatures, labels
+    
 
 
 def main():
-    images, temperatures, labels = data()
+    images, temperatures, labels = MDS2.data()
 
     fig, axes = plt.subplots(ncols=2, nrows=2, figsize=(8, 7),
                              gridspec_kw={'hspace': 0.4, 'wspace': 0.3})
