@@ -89,3 +89,29 @@ def get_Ising_images_temperatures_and_labels(zip_filename, csv_filename, verbose
 
     return images, temperatures, labels
 
+
+def get_CahnHilliard_images_and_energies(zip_filename, csv_filename, verbose):
+    if verbose:
+        print("- Reading zip archive from the location:\n ", zip_filename)
+    assert_that_zip_archive_contains_only_files(zip_filename)
+
+    images, filenames = read_images_from_zip_archive(zip_filename)
+    shape = images[0].shape
+    n_images = len(images)
+
+    if verbose:
+        print(f"- Extracted {n_images} images with {shape[0]} x {shape[1]} pixel.")
+        print("- Reading energies from CSV file:\n ", csv_filename)
+
+    csv_dataset = pd.read_csv(csv_filename)
+    csv_filenames = csv_dataset['filenames']
+
+    energies = []
+    for i, filename in enumerate(filenames):
+        # make sure that we pick the temperature and label that corresponds
+        # to a particular filename from the ZIP archive.
+        idx = np.argwhere(csv_dataset['filenames'] == filename)[0][0]
+        energies.append(csv_dataset['energy'][idx])
+    images = np.array(images, dtype=float)
+
+    return images, energies
