@@ -3,7 +3,8 @@ import os
 from os.path import join
 
 import matplotlib.pyplot as plt
-from MDSdata.io import get_images_temperatures_and_labels
+from numpy import ndarray
+from MDSdata.io import get_Ising_images_temperatures_and_labels
 
 
 """
@@ -21,40 +22,38 @@ above the Curie temperature (1).
 # a wrong relative path is resolved and reading a file from within this
 # script does not work properly. You can see this with
 # `print(os.path.dirname(os.path.abspath(__file__)))`
-p = join(os.path.dirname(os.path.abspath(__file__)), 'images_16.zip')
+p1 = join(os.path.dirname(os.path.abspath(__file__)), 'images_16.zip')
 p2 = join(os.path.dirname(os.path.abspath(__file__)), 'labels_16.csv')
 
 
-
-# def data():
-#     images, temperatures, labels = \
-#         get_images_temperatures_and_labels(
-#             zip_filename=p, 
-#             csv_filename=p2
-#         )
-#     return images, temperatures, labels
-
-
-
 class MDS2_light:
+    n_images = 5000
+    pixels = (16, 16)
+
     def __init__(self) -> None:
         # self.class_name = self.__class__.__name__
         pass
 
     @staticmethod
-    def data(verbose=False) -> (list, list, list):
+    def data(verbose=False) -> (ndarray, list, list):
         images, temperatures, labels = \
-            get_images_temperatures_and_labels(
-                zip_filename=p, 
+            get_Ising_images_temperatures_and_labels(
+                zip_filename=p1, 
                 csv_filename=p2,
                 verbose=verbose
             )
+        
+        # just some sanity checks
+        assert images.shape[0] == MDS2_light.n_images, f"The zip file is expected to contain 5000 images. Actual value: {images.shape[0]}"
+        assert images[0].shape == MDS2_light.pixels, f"The images in the zip file should be {MDS2_light.pixels}  in size"
         return images, temperatures, labels
     
-    # @staticmethod
-    # def info() -> None:
-    #     print("MDS2 (light) dataset obtained from simulations"
-    #           "with the Ising model. The image size is 16 x 16")
+    def __str__(self):
+        s = 'MDS2 (light) dataset obtained from simulations ' + \
+            f'with the Ising model. The dataset contains {MDS2_light.n_images} ' + \
+            'images sampled from the temperature range [0, 2Tc]. ' + \
+            f'The image are {MDS2_light.pixels[0]} x {MDS2_light.pixels[1]} pixels in size.'
+        return s
 
 
 

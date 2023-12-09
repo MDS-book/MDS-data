@@ -13,6 +13,7 @@ data please refer to the MDS-book.
 """
 
 def main():
+    print(MDS2_light())
     images, temperatures, labels = MDS2_light.data()
 
     fig, axes = plt.subplots(ncols=2, nrows=2, figsize=(8, 7),
@@ -22,7 +23,7 @@ def main():
     for i, idx in enumerate([10, 1500, 3000, 4500]):
         ax[i].imshow(images[idx])
         ax[i].set(title=f"T={temperatures[idx]:.2f},  label={labels[idx]}")
-    plt.show()
+    # plt.show()
 
 
 if __name__ == '__main__':

@@ -59,7 +59,7 @@ def read_images_from_zip_archive(zip_filename):
     return list_of_image_arrays, list_of_filenames
 
 
-def get_images_temperatures_and_labels(zip_filename, csv_filename, verbose):
+def get_Ising_images_temperatures_and_labels(zip_filename, csv_filename, verbose):
     if verbose:
         print("- Reading zip archive from the location:\n ", zip_filename)
     assert_that_zip_archive_contains_only_files(zip_filename)
@@ -85,5 +85,7 @@ def get_images_temperatures_and_labels(zip_filename, csv_filename, verbose):
         labels.append(csv_dataset['labels'][idx])
         # print(idx, filename, csv_filenames[idx])
         # print(temperatures)
+    images = np.array(images, dtype=float)
 
     return images, temperatures, labels
+

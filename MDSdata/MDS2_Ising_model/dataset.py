@@ -3,7 +3,7 @@ import os
 from os.path import join
 
 import matplotlib.pyplot as plt
-from MDSdata.io import get_images_temperatures_and_labels
+from MDSdata.io import get_Ising_images_temperatures_and_labels
 
 
 """
@@ -34,7 +34,7 @@ class MDS2:
     @staticmethod
     def data(verbose=False) -> (list, list, list):
         images, temperatures, labels = \
-            get_images_temperatures_and_labels(
+            get_Ising_images_temperatures_and_labels(
                 zip_filename=p, 
                 csv_filename=p2,
                 verbose=verbose
