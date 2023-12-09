@@ -17,15 +17,14 @@ from tqdm import tqdm
 
 
 """
-Dataset MDS 3
-Two files are required: a zip archiv that contains a number of
+Dataset MDS 3 -- Cahn-Hilliard
+
+The whole dataset consists of 18 simulations. For each,
+two files are required: a zip archiv that contains a number of
 images without any directory, and a csv file that contains three
 columns with the names (as first row):
-filenames,temperatures,labels
-
+filenames,energy
 The filenames must correspond to the the names in the zip archive.
-The labels (0 or 1) indicate if the temperature is below (0) or 
-above the Curie temperature (1).
 """
 
 # The absolute path is required when importing this package! Otherwise
@@ -33,11 +32,6 @@ above the Curie temperature (1).
 # script does not work properly. You can see this with
 # `print(os.path.dirname(os.path.abspath(__file__)))`
 p = join(os.path.dirname(os.path.abspath(__file__)), '')
-p1 = join(os.path.dirname(os.path.abspath(__file__)), 'CH_datasets_adaptive_part_A.zip')
-p2 = join(os.path.dirname(os.path.abspath(__file__)), 'train_data_partA_and_B_run_from_0_17.csv')
-
-
-
 
 
 class MDS3:
