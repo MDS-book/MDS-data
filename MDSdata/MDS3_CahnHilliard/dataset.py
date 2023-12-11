@@ -4,10 +4,9 @@ from os.path import join
 
 import matplotlib.pyplot as plt
 from numpy import ndarray
-from MDSdata.io import get_Ising_images_temperatures_and_labels, read_images_from_zip_archive, get_CahnHilliard_images_and_energies
+from MDSdata.io import get_CahnHilliard_images_and_energies
 
 
-import zipfile, io
 from PIL import Image
 import numpy as np
 import os.path
@@ -41,7 +40,7 @@ class MDS3:
         pass
 
     @staticmethod
-    def data(simulation_number=-1, verbose=False) -> (ndarray, list, list):
+    def data(simulation_number=-1, verbose=False) -> (ndarray, ndarray):
         """Reads and returns images and energie values for the Cahn-Hilliard datatset.
 
         :param simulation_number: if given (as int or list of ints), then only these 
@@ -64,11 +63,16 @@ class MDS3:
             zip_file = join(p, f"images_{n}.zip")
             csv_file = join(p, f"labels_{n}.csv")
 
-            images, energies = get_CahnHilliard_images_and_energies(zip_file, csv_file, False)
+            images, energies = get_CahnHilliard_images_and_energies(zip_file, csv_file, verbose)
             all_images += images.tolist()
             all_energies += energies
             
         all_images = np.array(all_images, dtype=float)
+        all_energies = np.array(all_energies, dtype=float)
+
+        # mask = np.array(all_energies) <= 1100
+        # all_images = all_images[mask]
+        # all_energies = all_energies[mask]
         
         # just some sanity checks
         assert all_images[0].shape == MDS3.pixels, f"The images in the zip files should be {MDS3.pixels}  in size"
@@ -92,7 +96,7 @@ def main():
                              gridspec_kw={'hspace': 0.4, 'wspace': 0.3})
     ax = axes.ravel()
     
-    for i, idx in enumerate([10, 500, 1000, 1500]):
+    for i, idx in enumerate([10, 100, 200, 600]):
         ax[i].imshow(images[idx])
         ax[i].set(title=f"T={energies[idx]:.2f}")
     plt.show()
