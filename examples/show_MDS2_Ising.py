@@ -13,7 +13,7 @@ data please refer to the MDS-book.
 """
 
 def main():
-    images, temperatures, labels = MDS2_light.data()
+    images, temperatures, labels = MDS2.data()
 
     fig, axes = plt.subplots(ncols=2, nrows=2, figsize=(8, 7),
                              gridspec_kw={'hspace': 0.4, 'wspace': 0.3})

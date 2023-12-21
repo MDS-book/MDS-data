@@ -52,6 +52,7 @@ def numpy_data():
     
     Returns the input matrix X, output vector y and the class mapping
     for chosen properties of a number of metallic and non-metallic elements.
+    The label y is 0 for non-metals and 1 for metals.
 
     ### The data file was extracted from the publication:
     J. J. V. Ferreira, M. T. S. Pinheiro, W. R. S. dos Santos, R. da Silva Mai:
@@ -61,9 +62,9 @@ def numpy_data():
 
     """
     df = pandas_data()
-    feature_names = ['atomic_radius', 'electron_affinity', 'ionization energy', 'electronegativity']
+    feature_names = np.array(['atomic_radius', 'electron_affinity', 'ionization energy', 'electronegativity'])
     X = np.array(df[feature_names])
-    y = np.array(df[['metallic']]).flatten()
+    y = np.array(df[['metallic']], dtype=int).flatten()
 
     return X, y, feature_names
 
@@ -93,15 +94,25 @@ def data(pandas=False):
 
 
 def main():
-    df, features = pandas_data()
-    print(df)
-    print(features)
-    data = numpy_data()
-    density = data[:, 0]
-    hardness = data[:, 1]
+    df = pandas_data()
+    # print(df)
 
-    plt.scatter(density, hardness)
+    X, Y, features_names = data()
+    atomic_radius = X[:, features_names == 'atomic_radius']
+    electron_affinity = X[:, features_names == 'electron_affinity']
+    print(Y)
+
+
+    fig, ax = plt.subplots(figsize=(3.8, 2.5))
+    mask = Y == 0
+    ax.plot(atomic_radius[mask], electron_affinity[mask], c='C0', lw=0, marker='o',  mec='C0', mfc='none', label='metallic')
+    ax.plot(atomic_radius[~mask], electron_affinity[~mask], c='C1', lw=0, marker='o', mec='C1', mfc='none', label='non-meallic')
+    ax.set(xlabel='atomic radius [pm]', ylabel='electron affinity [kJ/mol]')
+    ax.legend()
+
+    plt.tight_layout()
     #plt.show()
+    plt.savefig('chemelem.png', pad_inches=0.1, bbox_inches='tight')
 
 if __name__ == '__main__':
     main()

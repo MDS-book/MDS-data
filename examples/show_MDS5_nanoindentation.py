@@ -15,10 +15,15 @@ def main():
 
     # How to use the numpy version of the dataset
     X, feature_names = MDS5.data()
-    hardness = X[:, 0]
-    modulus = X[:, 1]
+    print("number of records:", X.shape[0])
+    print("feature names:    ", feature_names)
 
-    plt.scatter(hardness, modulus)
+    hardness = X[:, 1]
+    modulus = X[:, 0]
+
+    fig, ax = plt.subplots()
+    ax.scatter(modulus, hardness)
+    ax.set(xlim=(80, 510), ylim=(0.5, 5.2))
     plt.show()
 
 
