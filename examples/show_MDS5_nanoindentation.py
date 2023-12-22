@@ -9,23 +9,25 @@ refer to the MDS-book.
 """
 
 def main():
-    # How to use the pandas version of the dataset
-    df = MDS5.data(pandas=True)
-    print(df.head())
+    dataset = MDS5.load_data()
+    X = dataset.data
+    y = dataset.target 
+    print("The feature matrix has", X.shape[1], "features in columns:", dataset.feature_names)
+    print(" ... and", X.shape[0], "data records as rows of X.")
+    print("The class labels 0...3 of Y correspond to:", dataset.target_names)
 
-    # How to use the numpy version of the dataset
-    X, feature_names = MDS5.data()
-    print("number of records:", X.shape[0])
-    print("feature names:    ", feature_names)
-
-    hardness = X[:, 1]
     modulus = X[:, 0]
+    hardness = X[:, 1]
+    composit_type = y
 
     fig, ax = plt.subplots()
-    ax.scatter(modulus, hardness)
-    ax.set(xlim=(80, 510), ylim=(0.5, 5.2))
+    ax.scatter(modulus, hardness, c=composit_type)
+    ax.set(xlabel="Young's modulus [GPa]", ylabel="hardness [GPa]")
     plt.show()
 
 
+    modulus, hardness = MDS5.data(material='Cr25', outlier=True)
+    plt.scatter(modulus, hardness)
+    plt.show()
 if __name__ == '__main__':
     main()

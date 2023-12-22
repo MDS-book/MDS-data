@@ -4,4 +4,4 @@ from MDSdata.MDS2_Ising_model_light.dataset import MDS2_light
 from MDSdata.MDS2_Ising_model.dataset import MDS2
 from MDSdata.MDS3_CahnHilliard.dataset import MDS3
 from MDSdata.MDS4_chemical_elements import dataset as MDS4
-from MDSdata.MDS5_Nanoindentation import dataset as MDS5
+from MDSdata.MDS5_Nanoindentation.dataset import MDS5

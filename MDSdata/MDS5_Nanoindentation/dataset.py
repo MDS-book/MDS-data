@@ -6,76 +6,125 @@ from os.path import join
 
 
 
+# The class `Bunch`` is copied from the Python package scikit-learn, 
+# version 1.3.2, https://scikit-learn.org/.
+# The original code is licensed under the BSD license.
+# The BSD license text is contained in the file 
+# `MDSdata/BSD_3-Clause_License` of this repository/package.
+# The purpose of copying that class was to allow the same interface 
+# as scikit-learn.
+class Bunch(dict):
+    """Container object exposing keys as attributes.
 
-"""
-The data file is part of the supplementary data of the publication of:
-=================================
-Chen Zhang, Clémence Bos, Stefan Sandfeld, Ruth Schwaiger, 
-Unsupervised Learning of Nanoindentation Data to Infer Microstructural Details of Complex Materials,
-https://arxiv.org/abs/2309.06613
+    Bunch objects are sometimes used as an output for functions and methods.
+    They extend dictionaries by enabling values to be accessed by key,
+    `bunch["value_key"]`, or by an attribute, `bunch.value_key`.
 
-Description
-===========
-Tabular data for 664 nanoindents of a CuCr60 metallic material
-
-
-Usage:
-
-from MDSbook_utils.MDScode.Datasets.chemical_element_data import dataset
-
-df, features = dataset.pandas_data()
-print(features)
-display(df)
-
-
-X = dataset.numpy_data()
-
-"""
-
-def pandas_data():
-    """Returns a dataframe with the data    
+    Examples
+    --------
+    >>> from sklearn.utils import Bunch
+    >>> b = Bunch(a=1, b=2)
+    >>> b['b']
+    2
+    >>> b.b
+    2
+    >>> b.a = 3
+    >>> b['a']
+    3
+    >>> b.c = 6
+    >>> b['c']
+    6
     """
-    df = pd.read_csv(p)
-    feature_names = ['Modulus', 'Hardness']
-    return df[feature_names]
+
+    def __init__(self, **kwargs):
+        super().__init__(kwargs)
+
+    def __setattr__(self, key, value):
+        self[key] = value
+
+    def __dir__(self):
+        return self.keys()
+
+    def __getattr__(self, key):
+        try:
+            return self[key]
+        except KeyError:
+            raise AttributeError(key)
+
+    def __setstate__(self, state):
+        # Bunch pickles generated with scikit-learn 0.16.* have an non
+        # empty __dict__. This causes a surprising behaviour when
+        # loading these pickles scikit-learn 0.17: reading bunch.key
+        # uses __dict__ but assigning to bunch.key use __setattr__ and
+        # only changes bunch['key']. More details can be found at:
+        # https://github.com/scikit-learn/scikit-learn/issues/6196.
+        # Overriding __setstate__ to be a noop has the effect of
+        # ignoring the pickled __dict__
+        pass
 
 
-def numpy_data():
-    df = pandas_data()
-    feature_names = ['Modulus', 'Hardness']
-    X = np.array(df[feature_names])
-
-    return X, feature_names
 
 
-def data(pandas=False):
-    """MDS-dataset 'MDS-5: Nanoindentation CuCr60 (hardness and modulus)'.
+DESCR = \
+    """
+MDS-dataset MDS-5: Nanoindentation CuCr60 (hardness and modulus)
+----------------------------------------------------------------
+        
+**Dataset Characteristics:**
+
+    :Number of Instances: 378 (.., .., .., .. for each of four classes)
+    :Number of Attributes: 2 numeric, predictive attributes and the class
+    :Attribute Information:
+        - Young's modulus in GPa
+        - indentation hardness in GPA
+        - class:
+                - '0% Cr'
+                - '25% Cr'
+                - '60% Cr'
+                - '100% Cr'
+
+    :Summary Statistics:
+
+    :Missing Attribute Values: None
+
+    :Class Distribution: ... for each of 4 classes.
+
+    :Creator: Chen Zhang, Clémence Bos, Stefan Sandfeld, Ruth Schwaiger
+
+    :Donor:
+
+    :date July, 2023 
+
     
-    Returns the two features and the class mapping (column names)
-    for CuCr60.
+    Nanoindentation of four different Cu/Cr composites. The dataset has two 
+    features, the Young's modulus E and the hardness H, both of which are 
+    given in GPa.
 
-    :params pandas: whether to return numpy or pandas data
-        pandas=False: Returns input matrix X, and the class mapping
-        pandas=True: Returns DataFrame with data matrix and the column names
+    The data file is part of the supplementary material of the publication:
+    Chen Zhang, Clémence Bos, Stefan Sandfeld, Ruth Schwaiger: "Unsupervised 
+    Learning of Nanoindentation Data to Infer Microstructural Details of 
+    Complex Materials, https://arxiv.org/abs/2309.06613 which can also be 
+    found at https://doi.org/10.5281/zenodo.8336072
 
-    ### The data file was taken from the supplementary material of the publication:
-    Chen Zhang, Clémence Bos, Stefan Sandfeld, Ruth Schwaiger, 
-    Unsupervised Learning of Nanoindentation Data to Infer Microstructural Details of Complex Materials,
-    https://arxiv.org/abs/2309.06613
+    Please reference these publications if you are using the dataset or methods
+    for your own research.
 
-    It can also be found at https://doi.org/10.5281/zenodo.8336072
-
-    Please reference these publications if you are using the dataset or methods for your own research.
-    """    
-    if pandas:
-        return pandas_data()
-    else:
-        return numpy_data()
-
+    By default, outliers are removed, and the total number of data records is 
+    the above given number. If the outlier (e.g., for the purpose of an 
+    exercise) are required, then the above given total number of records and 
+    samples per class will be different ones.             
+    """
 
 
 class MDS5:
-    """MDS-dataset 'MDS-5: Nanoindentation CuCr60 (hardness and modulus)'."""  
+    """MDS-dataset 'MDS-5: Nanoindentation CuCr60 (hardness and modulus)'.
+    
+    The interface of the `data` method has been designed to conform closely
+    with the well-established interface of scikit-learn (see 
+    https://scikit-learn.org/stable/datasets.html). The main difference is
+    that when features and targets are returned as pandas DataFrame, they
+     are always returned as separate obejcts and never as combined DataFrame.
+    """  
         
     # The absolute path is required when importing this package! Otherwise
     # a wrong relative path is resolved and reading a file from within this
@@ -95,65 +144,128 @@ class MDS5:
         pass
 
     @staticmethod
-    def data(material='all', raw=False):
+    def load_data(outlier=False, return_X_y=False, as_frame=False):
         """MDS-dataset 'MDS-5: Nanoindentation CuCr60 (hardness and modulus)'.
         
-        Returns the either E and H for a particular composit or for all materials.
+        Nanoindentation of four different Cu/Cr composites. The dataset has two
+        features, the Young's modulus E and the hardness H, both of which are 
+        given in GPa.
 
-        ### The data file was taken from the supplementary material of the publication:
-        Chen Zhang, Clémence Bos, Stefan Sandfeld, Ruth Schwaiger, 
-        Unsupervised Learning of Nanoindentation Data to Infer Microstructural Details of Complex Materials,
-        https://arxiv.org/abs/2309.06613
+        =================   ==============
+        Classes                          4
+        Samples per class      ??/??/??/??
+        Records total                  938
+        Dimensionality                   2
+        Features            real, positive
+        =================   ==============
 
-        It can also be found at https://doi.org/10.5281/zenodo.8336072
+        More details can be found in the MDS book and at https://MDS-book.org
 
-        Please reference these publications if you are using the dataset or methods for your own research.
+        The data file is part of the supplementary material of the publication:
+        Chen Zhang, Clémence Bos, Stefan Sandfeld, Ruth Schwaiger: "Unsupervised 
+        Learning of Nanoindentation Data to Infer Microstructural Details of 
+        Complex Materials, https://arxiv.org/abs/2309.06613 which can also be 
+        found at https://doi.org/10.5281/zenodo.8336072
 
-        :param material: either 'all' or the material name (Cu or Cr0, Cr25, Cr60, Cr or Cr100)
-        :param raw: True: the full dataset will be read; False: outliers are removed
-        :returns: two 1D ndarrays containing YOung's modulus E and hardness H
-                  Only if material='all' then a list of tuples (E, H) is returned:
-                  [(E_Cr0, H_Cr0), ..., (E_Cr100, H_Cr100)]
-        """
-        if material != 'all':
-            if material == 'Cu' or material == 'Cr0':
-                df = pd.read_csv(MDS5.p0 if raw else MDS5.p0red)
-            elif material == 'Cr25':
-                df = pd.read_csv(MDS5.p25 if raw else MDS5.p25red)
-            elif material == 'Cr60':
-                df = pd.read_csv(MDS5.p60 if raw else MDS5.p60red)
-            elif material == 'Cr' or material == 'Cr100':
-                df = pd.read_csv(MDS5.p100 if raw else MDS5.p100red)
-            
-            return np.array(df['E']), np.array(df['H'])
+        Please reference these publications if you are using the dataset or methods
+        for your own research.
         
+        Parameters
+        ----------
+        return_X_y : bool, default=False
+            If True, returns ``(data, target)`` instead of a 
+            dictionary-like Bunch
+            ``{data, target, taget_names, DESCR, feature_names}``. 
+
+        as_frame : bool, default=False
+            If True, the data is a pandas DataFrames, and the target is a 
+            pandas DataFrame or Series depending on the number of target 
+            columns.
+
+        outlier: bool, default=False
+            In the default case, outliers are removed, and the total number of
+            data records is the above given number. If the outlier (e.g., 
+            for the purpose of an exercise) are required, then the above
+            given total number of records and samples per class are different.
+
+
+        Returns
+        -------
+        data : Either a set of feature matrix and target vector or a 
+               Bunch (i.e., a dictionary that can be accessed using a dot)
+               with the following attributes:
+
+            data : {ndarray, dataframe} of shape (???, 2)
+                The data matrix. If `as_frame=True`, `data` will be a pandas
+                DataFrame.
+            target: {ndarray, Series} of shape (150,)
+                The classification target. If `as_frame=True`, `target` will be
+                a pandas Series.
+            feature_names: list
+                The names of the dataset columns.
+            target_names: list
+                The names of target classes.
+            frame: DataFrame of shape (???, 3)
+                Only present when `as_frame=True`. DataFrame with `data` and
+                `target`.
+
+            DESCR: str
+                The full description of the dataset.
+        """
+
+        _feature_names = ["Young's modulus", "hardness"]
+        label_names = ['0% Cr', '25% Cr', '60% Cr', '100% Cr']
+        modulus, hardness, class_id = [], [], []
+
+        if outlier:
+            paths = [MDS5.p0, MDS5.p25, MDS5.p60, MDS5.p100]
         else:
-            # Return all datasets:
-            modulus, hardness, class_names, class_id = [], [], [], []
+            paths = [MDS5.p0red, MDS5.p25red, MDS5.p60red, MDS5.p100red]
 
-            if raw:
-                paths = [MDS5.p0, MDS5.p25, MDS5.p60, MDS5.p100]
-            else:
-                paths = [MDS5.p0red, MDS5.p25red, MDS5.p60red, MDS5.p100red]
-            label_names = ['0% Cr', '25% Cr', '60% Cr', '100% Cr']
+        for i, p in enumerate(paths):
+            df = pd.read_csv(p)
+            modulus += df['E'].tolist()
+            hardness += df['H'].tolist()
+            class_id += df['E'].size * [i]
+        
+        X = np.stack((modulus, hardness), axis=0).T
+        y = np.array(class_id, dtype=int)
 
-            for i, p in enumerate(paths):
-                df = pd.read_csv(p)
-                modulus += df['E'].tolist()
-                hardness += df['H'].tolist()
-                class_names.append(label_names[i])
-                class_id += df['E'].size * [i]
+        if as_frame:
+            X = pd.DataFrame(data=X, columns=_feature_names)
+            y = pd.DataFrame(data=y, columns=['target'])
 
-            X = np.stack((modulus, hardness), axis=0).T
-            Y = np.array(class_id, dtype=int)
-            return X, Y, class_names
+        if return_X_y:
+            return X, y
+
+        return Bunch(
+            data=X, 
+            target=y,
+            feature_names=_feature_names, 
+            target_names=label_names, 
+            DESCR=DESCR,
+        )
+
 
 
 def main():
+    dataset = MDS5.load_data()
+    X = dataset.data
+    y = dataset.target 
 
-    X, Y, class_names = MDS5.data()
-    print("feature matrix has the shape:", X.shape)
-    print("The class label 0...3 correspond to the materials:", class_names)
+    print("The feature matrix has the shape:", X.shape)
+    print("The two features are:", dataset.feature_names)
+    print("The class label 0...3 correspond to the materials:", dataset.target_names)
+
+    
+    X, y = MDS5.load_data(return_X_y=True)
+
+
+    return
+
+    X, Y, feature_names, label_names = MDS5.data()
+    print("The feature matrix has the shape:", X.shape)
+    print("The class label 0...3 correspond to the materials:", label_names)
 
     modulus = X[:, 0]
     hardness = X[:, 1]
@@ -163,16 +275,16 @@ def main():
     #return 
     fig, ax = plt.subplots(ncols=2, figsize=(9, 4))
 
-    modulus, hardness = MDS5.data(material='Cr0', raw=True)
+    modulus, hardness, _, _ = MDS5.data(material='Cr0', outlier=True)
     ax[0].scatter(modulus, hardness, alpha=0.5)
 
-    modulus, hardness = MDS5.data(material='Cr25', raw=True)
+    modulus, hardness, _, _ = MDS5.data(material='Cr25', outlier=True)
     ax[0].scatter(modulus, hardness, alpha=0.5)
 
-    modulus, hardness = MDS5.data(material='Cr60', raw=True)
+    modulus, hardness, _, _ = MDS5.data(material='Cr60', outlier=True)
     ax[0].scatter(modulus, hardness, alpha=0.5)
 
-    modulus, hardness = MDS5.data(material='Cr100', raw=True)
+    modulus, hardness, _, _ = MDS5.data(material='Cr100', outlier=True)
     ax[0].scatter(modulus, hardness, alpha=0.5)
 
     # ------------------------------------------------
