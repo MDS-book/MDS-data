@@ -8,8 +8,7 @@ from MDSdata._bunch import Bunch
 
 
 
-DESCR = \
-    """
+DESCR = """
 MDS-dataset MDS-5: Nanoindentation CuCr60 (hardness and modulus)
 ----------------------------------------------------------------
         
@@ -64,9 +63,9 @@ class MDS5:
     
     The interface of the `data` method has been designed to conform closely
     with the well-established interface of scikit-learn (see 
-    https://scikit-learn.org/stable/datasets.html). The main difference is
-    that when features and targets are returned as pandas DataFrame, they
-     are always returned as separate obejcts and never as combined DataFrame.
+    https://scikit-learn.org/stable/datasets.html). The only difference is
+    that the returned dictionary-like `Bunch` also contains `feature_matrix`,
+    which is an alias for scikit-learn's `data` array/dataframe.
     """  
         
     # The absolute path is required when importing this package! Otherwise
@@ -121,8 +120,8 @@ class MDS5:
             ``{data, target, taget_names, DESCR, feature_names}``. 
 
         as_frame : bool, default=False
-            If True, the data is a pandas DataFrames, and the target is a 
-            pandas DataFrame or Series depending on the number of target 
+            If True, the feature matrix is a pandas DataFrames, and the target
+            is a pandas DataFrame or Series depending on the number of target 
             columns.
 
         outlier: bool, default=False
@@ -134,18 +133,20 @@ class MDS5:
 
         Returns
         -------
-        data : Either a set of feature matrix and target vector or a 
-               Bunch (i.e., a dictionary that can be accessed using a dot)
-               with the following attributes:
+        data : Either the feature matrix and target vector (the set of (X, y)) 
+                or a "Bunch" (i.e., a dictionary where items can be accessed 
+                using a dot) with the following attributes:
 
-            data : {ndarray, dataframe} of shape (???, 2)
-                The data matrix. If `as_frame=True`, `data` will be a pandas
-                DataFrame.
+            feature_matrix : {ndarray, dataframe} of shape (???, 2)
+                The feature matrix. If `as_frame=True`, `data` will be returned
+                as a pandas DataFrame.
+            data : this is the same as `feature_matrix`. It is kept for 
+                compatibility with scikit-learn.
             target: {ndarray, Series} of shape (150,)
                 The classification target. If `as_frame=True`, `target` will be
                 a pandas Series.
             feature_names: list
-                The names of the dataset columns.
+                The names of the features (columns of the feature_matrix).
             target_names: list
                 The names of target classes.
             frame: DataFrame of shape (???, 3)
@@ -173,19 +174,24 @@ class MDS5:
         
         X = np.stack((modulus, hardness), axis=0).T
         y = np.array(class_id, dtype=int)
+        combined_frame = []
 
         if as_frame:
             X = pd.DataFrame(data=X, columns=_feature_names)
             y = pd.DataFrame(data=y, columns=['target'])
+            combined_frame = pd.concat([X, y], axis=1)
+
 
         if return_X_y:
             return X, y
 
         return Bunch(
-            data=X, 
+            feature_matrix=X,
+            data=X,
             target=y,
             feature_names=_feature_names, 
             target_names=label_names, 
+            frame = combined_frame,
             DESCR=DESCR,
         )
 
@@ -193,7 +199,7 @@ class MDS5:
 
 def main():
     dataset = MDS5.load_data()
-    X = dataset.data
+    X = dataset.feature_matrix
     y = dataset.target 
 
     print("The feature matrix has the shape:", X.shape)

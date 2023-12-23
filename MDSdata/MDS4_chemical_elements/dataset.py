@@ -3,108 +3,188 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 from os.path import join
-
-# The absolute path is required when importing this package! Otherwise
-# a wrong relative path is resolved and reading a file from within this
-# script does not work properly. You can see this with
-# `print(os.path.dirname(os.path.abspath(__file__)))`
-p = join(os.path.dirname(os.path.abspath(__file__)), 'element_properties.csv')  
+from MDSdata._bunch import Bunch
 
 
 
+DESCR = """
+MDS-dataset 'MDS-4: Chemical Elements'
+--------------------------------------
 
+**Dataset Characteristics:**
+
+    :Number of Instances: 38 (22 metals and 16 non-metals)
+    :Number of Attributes: 4 numeric, predictive attributes and the class
+    :Attribute Information:
+        - atomic radius [pm]
+        - electron affinity [kJ/mol]
+        - ionization energy [kJ/mol]
+        - electronegativity [-]
+        - class:
+                - non-metalliv (target value = 0)
+                - metallic (target value = 1)
+
+    :Summary Statistics:
+
+    :Missing Attribute Values: None
+
+    :Class Distribution: 22 and 16 examples for 2 classes.
+
+    :Creator: The data file was extracted from the publication:
+        J. J. V. Ferreira, M. T. S. Pinheiro, W. R. S. dos Santos, and
+        R. da Silva Mai: "Graphical representation of chemical periodicity 
+        of main elements through boxplot", Educación Química (2016) 27, 
+        209---216, http://dx.doi.org/10.1016/j.eq.2016.04.007
+
+    :Donor:
+
+    :date May, 2023 
+
+    This dataset contains four periodic properties: atomic radius, electron 
+    affinity, ionization energy and the electronegativity. These properties 
+    were collected for a total of 38 chemical elements (22 metals and 16 
+    non-metals), originally taken from a number of different publicly 
+    available sources.
 """
-The data file was extracted from:
-=================================
-J. J. V. Ferreira, M. T. S. Pinheiro, W. R. S. dos Santos, R. da Silva Mai:
-"Graphical representation of chemical periodicity of main elements through boxplot",
-Educación Química (2016) 27, 209---216
-http://dx.doi.org/10.1016/j.eq.2016.04.007
-
-Description
-===========
-Tabular data for chosen properties of a number of metallic and non-metallic elements
 
 
-Usage:
-
-from MDSbook_utils.MDScode.Datasets.chemical_element_data import dataset
-
-df, features = dataset.pandas_data()
-print(features)
-display(df)
 
 
-X = dataset.numpy_data()
-
-"""
-
-def pandas_data():
-    """Returns a dataframe with the data    
-    """
-    df = pd.read_csv(p)
-    #df.columns = features
-    return df #, df.columns
 
 
-def numpy_data():
+
+
+class MDS4:
     """MDS-dataset 'MDS-4: Chemical Elements'.
     
-    Returns the input matrix X, output vector y and the class mapping
-    for chosen properties of a number of metallic and non-metallic elements.
-    The label y is 0 for non-metals and 1 for metals.
-
-    ### The data file was extracted from the publication:
-    J. J. V. Ferreira, M. T. S. Pinheiro, W. R. S. dos Santos, R. da Silva Mai:
-    "Graphical representation of chemical periodicity of main elements through boxplot",
-    Educación Química (2016) 27, 209---216, 
-    http://dx.doi.org/10.1016/j.eq.2016.04.007
-
-    """
-    df = pandas_data()
-    feature_names = np.array(['atomic_radius', 'electron_affinity', 'ionization energy', 'electronegativity'])
-    X = np.array(df[feature_names])
-    y = np.array(df[['metallic']], dtype=int).flatten()
-
-    return X, y, feature_names
+    The interface of the `data` method has been designed to conform closely
+    with the well-established interface of scikit-learn (see 
+    https://scikit-learn.org/stable/datasets.html). The only difference is
+    that the returned dictionary-like `Bunch` also contains `feature_matrix`,
+    which is an alias for scikit-learn's `data` array/dataframe.
+    """  
+        
+    # The absolute path is required when importing this package! Otherwise
+    # a wrong relative path is resolved and reading a file from within this
+    # script does not work properly. You can see this with
+    # `print(os.path.dirname(os.path.abspath(__file__)))`
+    p = join(os.path.dirname(os.path.abspath(__file__)), 'element_properties.csv')  
 
 
-def data(pandas=False):
-    """MDS-dataset 'MDS-4: Chemical Elements'.
-    
+    def __init__(self) -> None:
+        pass
 
-    Returns the features, labels and the class mapping
-    for chosen properties of a number of metallic and non-metallic elements.
+    @staticmethod
+    def load_data(return_X_y=False, as_frame=False):
+        """MDS-dataset 'MDS-4: Chemical Elements'.
 
-    :params pandas: whether to return numpy or pandas data
-        pandas=False: Returns input matrix X, output vector y and the class mapping
-        pandas=True: Returns DataFrame with data matrix and the column names
+        Chosen periodic properties of a number of metallic and non-metallic 
+        elements.
 
-    ### The data file was extracted from the publication:
-    J. J. V. Ferreira, M. T. S. Pinheiro, W. R. S. dos Santos, R. da Silva Mai:
-    "Graphical representation of chemical periodicity of main elements through boxplot",
-    Educación Química (2016) 27, 209---216, 
-    http://dx.doi.org/10.1016/j.eq.2016.04.007
+        =================   ==============
+        Classes                          2
+        Samples per class        22 metals
+                             16 non-metals
+        Records total                   38
+        Dimensionality                   4
+        Features                      real
+        =================   ==============
 
-    """    
-    if pandas:
-        return pandas_data()
-    else:
-        return numpy_data()
+        More details can be found in the MDS book and at https://MDS-book.org
+
+        The data file was extracted from the publication:
+        J. J. V. Ferreira, M. T. S. Pinheiro, W. R. S. dos Santos, and 
+        R. da Silva Mai: "Graphical representation of chemical periodicity of
+        main elements through boxplot", Educación Química (2016) 27, 209---216
+        http://dx.doi.org/10.1016/j.eq.2016.04.007
+
+        
+        Parameters
+        ----------
+        return_X_y : bool, default=False
+            If True, returns ``(feature_matrix, target)`` instead of a 
+            dictionary-like `Bunch` object (where items can be accessed
+            using "."): 
+            ``{feature_matrix, target, feature_names, taget_names, DESCR}``.
+
+        as_frame : bool, default=False
+            If True, the feature matrix is a pandas DataFrames, and the target
+            is a pandas DataFrame or Series depending on the number of target 
+            columns.
+
+
+        Returns
+        -------
+        data : Either the feature matrix and target vector (the set of (X, y)) 
+                or a "Bunch" (i.e., a dictionary where items can be accessed 
+                using a dot) with the following attributes:
+
+            feature_matrix : {ndarray, dataframe} of shape (38, 4)
+                The feature matrix. If `as_frame=True`, `data` will be returned
+                as a pandas DataFrame.
+            data : this is the same as `feature_matrix`. It is kept for 
+                compatibility with scikit-learn.
+            target: {ndarray, Series} of shape (38,)
+                The classification target. If `as_frame=True`, `target` will be
+                a pandas Series.
+            feature_names: list
+                The names of the features (columns of the feature_matrix).
+            target_names: list
+                The names of target classes.
+            frame: DataFrame of shape (38, 4)
+                Only present when `as_frame=True`. DataFrame with `feature_matrix` and
+                `target`.
+
+            DESCR: str
+                The full description of the dataset.
+        """
+
+        feature_names = np.array(['atomic_radius', 'electron_affinity', 'ionization energy', 'electronegativity'])
+        label_names = ['metallic', 'non-metallic']
+
+        df = pd.read_csv(MDS4.p)
+        X = np.array(df[feature_names])
+        y = np.array(df[['metallic']], dtype=int).flatten()
+
+        combined_frame = []
+
+        if as_frame:
+            X = pd.DataFrame(data=X, columns=feature_names)
+            y = pd.DataFrame(data=y, columns=['target'])
+            combined_frame = pd.concat([X, y], axis=1)
+
+        if return_X_y:
+            return X, y
+
+        return Bunch(
+            feature_matrix=X,
+            data=X,
+            target=y,
+            feature_names=feature_names, 
+            target_names=label_names, 
+            frame = combined_frame,
+            DESCR=DESCR,
+        )
+
+
+
+
 
 
 def main():
-    df = pandas_data()
-    # print(df)
 
-    X, Y, features_names = data()
+    data = MDS4.load_data()
+    X = data.feature_matrix
+    y = data.target
+    features_names = data.feature_names
+
     atomic_radius = X[:, features_names == 'atomic_radius']
     electron_affinity = X[:, features_names == 'electron_affinity']
-    print(Y)
+    print(atomic_radius)
 
-
+    
     fig, ax = plt.subplots(figsize=(3.8, 2.5))
-    mask = Y == 0
+    mask = y == 1
     ax.plot(atomic_radius[mask], electron_affinity[mask], c='C0', lw=0, marker='o',  mec='C0', mfc='none', label='metallic')
     ax.plot(atomic_radius[~mask], electron_affinity[~mask], c='C1', lw=0, marker='o', mec='C1', mfc='none', label='non-meallic')
     ax.set(xlabel='atomic radius [pm]', ylabel='electron affinity [kJ/mol]')

@@ -10,7 +10,7 @@ refer to the MDS-book.
 
 def main():
     CuCr = MDS5.load_data()
-    X = CuCr.data
+    X = CuCr.feature_matrix
     y = CuCr.target 
     print("The feature matrix has", X.shape[1], "features in columns:", CuCr.feature_names)
     print(" ... and", X.shape[0], "data records as rows of X.")
