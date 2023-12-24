@@ -112,7 +112,7 @@ class MDS1:
 
         verbose: bool, default=False
             Enabl additional output and information during reading the data.
-        """
+        """ 
 
         assert temperature in [0, 400, 600], \
             "temperature can only be 0, 400, or 600"
