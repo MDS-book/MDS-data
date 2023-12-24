@@ -45,7 +45,7 @@ MDS-Dataset 'MDS-3 -- Cahn-Hilliard'
 class MDS3:
     """MDS-Dataset 'MDS-3 -- Cahn-Hilliard'
 
-    The interface of the `data` method has been designed to conform closely
+    The interface of the `load_data` method has been designed to conform closely
     with the well-established interface of scikit-learn (see 
     https://scikit-learn.org/stable/datasets.html). The only difference is
     that the returned dictionary-like `Bunch` also contains `feature_matrix`,

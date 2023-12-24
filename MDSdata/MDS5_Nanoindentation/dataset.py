@@ -9,8 +9,8 @@ from MDSdata._bunch import Bunch
 
 
 DESCR = """
-MDS-dataset MDS-5: Nanoindentation CuCr60 (hardness and modulus)
-----------------------------------------------------------------
+MDS-dataset MDS-5: Nanoindentation CuCr composites
+--------------------------------------------------
         
 **Dataset Characteristics:**
 
@@ -55,13 +55,13 @@ MDS-dataset MDS-5: Nanoindentation CuCr60 (hardness and modulus)
     the above given number. If the outlier (e.g., for the purpose of an 
     exercise) are required, then the above given total number of records and 
     samples per class will be different ones.             
-    """
+"""
 
 
 class MDS5:
     """MDS-dataset 'MDS-5: Nanoindentation'.
     
-    The interface of the `data` method has been designed to conform closely
+    The interface of the `load_data` method has been designed to conform closely
     with the well-established interface of scikit-learn (see 
     https://scikit-learn.org/stable/datasets.html). The only difference is
     that the returned dictionary-like `Bunch` also contains `feature_matrix`,
@@ -182,7 +182,6 @@ class MDS5:
             X = pd.DataFrame(data=X, columns=_feature_names)
             y = pd.DataFrame(data=y, columns=['target'])
             combined_frame = pd.concat([X, y], axis=1)
-
 
         if return_X_y:
             return X, y
