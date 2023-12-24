@@ -75,8 +75,8 @@ class MDS4:
         pass
 
     @staticmethod
-    def load_data(return_X_y=False, as_frame=False):
-        """MDS-dataset 'MDS-4: Chemical Elements'.
+    def load_data(*, return_X_y=False, as_frame=False):
+        """Read and return data of the MDS-dataset 'MDS-4: Chemical Elements'.
 
         Chosen periodic properties of a number of metallic and non-metallic 
         elements.

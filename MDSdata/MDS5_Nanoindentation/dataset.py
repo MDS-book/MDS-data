@@ -59,13 +59,15 @@ MDS-dataset MDS-5: Nanoindentation CuCr60 (hardness and modulus)
 
 
 class MDS5:
-    """MDS-dataset 'MDS-5: Nanoindentation CuCr60 (hardness and modulus)'.
+    """MDS-dataset 'MDS-5: Nanoindentation'.
     
     The interface of the `data` method has been designed to conform closely
     with the well-established interface of scikit-learn (see 
     https://scikit-learn.org/stable/datasets.html). The only difference is
     that the returned dictionary-like `Bunch` also contains `feature_matrix`,
     which is an alias for scikit-learn's `data` array/dataframe.
+
+    See the documentation of `load_data` for further details.
     """  
         
     # The absolute path is required when importing this package! Otherwise
@@ -86,8 +88,8 @@ class MDS5:
         pass
 
     @staticmethod
-    def load_data(outlier=False, return_X_y=False, as_frame=False):
-        """MDS-dataset 'MDS-5: Nanoindentation CuCr60 (hardness and modulus)'.
+    def load_data(*, outlier=False, return_X_y=False, as_frame=False):
+        """Read and return data of the MDS-dataset 'MDS-5: Nanoindentation'.
         
         Nanoindentation of four different Cu/Cr composites. The dataset has two
         features, the Young's modulus E and the hardness H, both of which are 
@@ -114,7 +116,7 @@ class MDS5:
         
         Parameters
         ----------
-        return_X_y : bool, default=False
+        return_X_y: bool, default=False
             If True, returns ``(data, target)`` instead of a 
             dictionary-like Bunch
             ``{data, target, taget_names, DESCR, feature_names}``. 

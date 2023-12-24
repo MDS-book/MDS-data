@@ -1,52 +1,116 @@
 import numpy as np
-import os
-from os.path import join
-
-import matplotlib.pyplot as plt
 from numpy import ndarray
-from MDSdata.io import get_CahnHilliard_images_and_energies
-
-
-from PIL import Image
-import numpy as np
-import os.path
 import pandas as pd
 from tqdm import tqdm
+import os
+import os.path
+from os.path import join
+import matplotlib.pyplot as plt
+
+from MDSdata.io import get_CahnHilliard_images_and_energies
+from MDSdata._bunch import Bunch
 
 
 
-"""
-Dataset MDS 3 -- Cahn-Hilliard
 
-The whole dataset consists of 18 simulations. For each,
-two files are required: a zip archiv that contains a number of
-images without any directory, and a csv file that contains three
-columns with the names (as first row):
-filenames,energy
-The filenames must correspond to the the names in the zip archive.
-"""
+DESCR = """
+MDS-Dataset 'MDS-3 -- Cahn-Hilliard'
+------------------------------------
+        
+**Dataset Characteristics:**
 
-# The absolute path is required when importing this package! Otherwise
-# a wrong relative path is resolved and reading a file from within this
-# script does not work properly. You can see this with
-# `print(os.path.dirname(os.path.abspath(__file__)))`
-p = join(os.path.dirname(os.path.abspath(__file__)), '')
+    :Number of Instances: ??? (.., .., .., .. for each of four classes)
+    :Number of Attributes: 2 numeric, predictive attributes and the class
+    :Attribute Information:
+        - 
+        - 
+        - class:
+                - 0:
+                - 1:
+
+    :Class Distribution: ... for each of the 2 classes.
+
+    :Creator: Binh Duong Nguyen, Stefan Sandfeld
+
+    :date May, 2023 
+  
+
+    The whole dataset consists of 18 simulations. For each,
+    two files are required: a zip archiv that contains a number of
+    images without any directory, and a csv file that contains three
+    columns with the names (as first row):
+    filenames,energy
+    The filenames must correspond to the the names in the zip archive.           
+    """
+
+
 
 
 class MDS3:
+    """MDS-Dataset 'MDS-3 -- Cahn-Hilliard'
+
+    The interface of the `data` method has been designed to conform closely
+    with the well-established interface of scikit-learn (see 
+    https://scikit-learn.org/stable/datasets.html). The only difference is
+    that the returned dictionary-like `Bunch` also contains `feature_matrix`,
+    which is an alias for scikit-learn's `data` array/dataframe.
+
+    See the documentation of `load_data` for further details.
+    """
+
     pixels = (64, 64)
+
+    # The absolute path is required when importing this package! Otherwise
+    # a wrong relative path is resolved and reading a file from within this
+    # script does not work properly. You can see this with
+    # `print(os.path.dirname(os.path.abspath(__file__)))`
+    p = join(os.path.dirname(os.path.abspath(__file__)), '')
 
     def __init__(self) -> None:
         pass
 
     @staticmethod
-    def data(simulation_number=-1, verbose=False) -> (ndarray, ndarray):
-        """Reads and returns images and energie values for the Cahn-Hilliard datatset.
-
-        :param simulation_number: if given (as int or list of ints), then only these 
-            simulations will be read. Otherwise, all 18 simulations will be read.
+    def load_data(*, simulation_number=-1, return_X_y=False, as_frame=False, 
+                  verbose=False):
+        """Read and return data of the MDS-Dataset 'MDS-3 -- Cahn-Hilliard'
         
+        The dataset consists of images of phase microstructures and the 
+        corresponding energie values obtained from simulations of the 
+        Cahn-Hilliard model. 
+        
+        The images are stored in a ZIP archive and will be extracted to a list
+        of numpy arrays. There are 17866 images of 64x64 pixels in size.
+        
+        The microstructures-energy pairs were shuffled, i.e., they do not occur
+        in the same order as the evolution of the simulation. If this is 
+        required, one can eailsy sort them according to decreasing energy.
+
+        =================   ==============
+        Records total                17866
+        Dimensionality                4096
+        Features            integer, 0-255
+        Targets             real, positive
+        =================   ==============
+
+        Parameters
+        ----------
+        simulation_number: if given (as int or list of ints), then only these 
+            simulations will be read. Otherwise, all 18 simulations will be read.
+
+        return_X_y : bool, default=False
+            If True, returns ``(data, target)`` instead of a 
+            dictionary-like Bunch
+            ``{data, target, taget_names, DESCR, feature_names}``. 
+
+        as_frame: bool, default=False
+            If True, the feature matrix is a pandas DataFrames, and the target
+            is a pandas DataFrame or Series depending on the number of target 
+            columns.
+
+        verbose: bool, default=False
+            Enabl additional output and information during reading the data.
         """
+
         assert isinstance(simulation_number, (int, list)), \
             "simulation_number must be either an int or a list of ints"
         
@@ -58,16 +122,20 @@ class MDS3:
         all_images = []
         all_energies = []
 
-        progress_bar = tqdm(simulation_number, total=len(simulation_number), leave=False)
+        if len(simulation_number) < 2:
+            progress_bar = simulation_number
+        else:
+            progress_bar = tqdm(simulation_number, total=len(simulation_number), leave=False)
+
         for n in progress_bar:
-            zip_file = join(p, f"images_{n}.zip")
-            csv_file = join(p, f"labels_{n}.csv")
+            zip_file = join(MDS3.p, f"images_{n}.zip")
+            csv_file = join(MDS3.p, f"labels_{n}.csv")
 
             images, energies = get_CahnHilliard_images_and_energies(zip_file, csv_file, verbose)
             all_images += images.tolist()
             all_energies += energies
             
-        all_images = np.array(all_images, dtype=float)
+        all_images = np.array(all_images, dtype=int)
         all_energies = np.array(all_energies, dtype=float)
 
         # mask = np.array(all_energies) <= 1100
@@ -77,28 +145,46 @@ class MDS3:
         # just some sanity checks
         assert all_images[0].shape == MDS3.pixels, f"The images in the zip files should be {MDS3.pixels}  in size"
 
-        return all_images, all_energies
+        feature_names = ['array']
+        label_names = ['energy']
+        combined_frame = []
+
+        if as_frame:
+            X = pd.DataFrame(data=all_images, columns=feature_names)
+            y = pd.DataFrame(data=all_energies, columns=label_names)
+            combined_frame = pd.concat([X, y], axis=1)
+            
+        if return_X_y:
+            return all_images, all_energies
     
-    # def __str__(self):
-    #     s = 'MDS2 (light) dataset obtained from simulations ' + \
-    #         f'with the Ising model. The dataset contains {MDS2_light.n_images} ' + \
-    #         'images sampled from the temperature range [0, 2Tc]. ' + \
-    #         f'The image are {MDS2_light.pixels[0]} x {MDS2_light.pixels[1]} pixels in size.'
-    #     return s
+        return Bunch(
+            feature_matrix=all_images,
+            data=all_images,
+            target=all_energies,
+            feature_names=feature_names, 
+            target_names=label_names, 
+            frame = combined_frame,
+            DESCR=DESCR,
+        )
 
 
 
 def main():
 
-    images, energies = MDS3.data(simulation_number=1)
+    images, energies = MDS3.load_data(simulation_number=1, return_X_y=True, verbose=True)
+
+    idx = np.argsort(energies)
+    energies = energies[idx]
+    images = images[idx]
+    n_images = images.shape[0]
 
     fig, axes = plt.subplots(ncols=2, nrows=2, figsize=(8, 7),
                              gridspec_kw={'hspace': 0.4, 'wspace': 0.3})
     ax = axes.ravel()
     
-    for i, idx in enumerate([10, 100, 200, 600]):
+    for i, idx in enumerate([0, n_images // 3, 2 * n_images // 3, n_images - 1]):
         ax[i].imshow(images[idx])
-        ax[i].set(title=f"T={energies[idx]:.2f}")
+        ax[i].set(title=f"image no. {idx}: E={energies[idx]:.2f}")
     plt.show()
 
 

@@ -13,13 +13,12 @@ data please refer to the MDS-book.
 """
 
 def main():
-    print(MDS3())
-    images, energies = MDS3.data()
+    images, energies = MDS3.load_data(simulation_number=-1, return_X_y=True)
     n_images = images.shape[0]
     print("The dataset contains", n_images, "images.")
     print("They are", images.shape[1], "x", images.shape[2], " pixel in size.")
-    print("The minimum energy is:", energies.min())
-    print("The maximum energy is:", energies.max())
+    print(f"The minimum energy is: {energies.min(): .1f}")
+    print(f"The maximum energy is: {energies.max(): .1f}")
           
     fig, axes = plt.subplots(ncols=2, nrows=2, figsize=(8, 7),
                              gridspec_kw={'hspace': 0.4, 'wspace': 0.3})
@@ -27,7 +26,7 @@ def main():
     
     for i, idx in enumerate([10, 1000, 2000, 3000]):
         ax[i].imshow(images[idx])
-        ax[i].set(title=f"T={energies[idx]:.2f},")
+        ax[i].set(title=f"image no. {idx}: E={energies[idx]:.2f}")
     plt.show()
 
 
