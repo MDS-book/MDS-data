@@ -11,8 +11,6 @@ from MDSdata.io import get_CahnHilliard_images_and_energies
 from MDSdata._bunch import Bunch
 
 
-
-
 DESCR = """
 MDS-Dataset 'MDS-3 -- Cahn-Hilliard'
 ------------------------------------
@@ -20,7 +18,7 @@ MDS-Dataset 'MDS-3 -- Cahn-Hilliard'
 **Dataset Characteristics:**
 
     :Number of Instances: ??? (.., .., .., .. for each of four classes)
-    :Number of Attributes: 2 numeric, predictive attributes and the class
+    :Number of Attributes: 4096 numeric, predictive attributes and the class
     :Attribute Information:
         - 
         - 
@@ -41,9 +39,7 @@ MDS-Dataset 'MDS-3 -- Cahn-Hilliard'
     columns with the names (as first row):
     filenames,energy
     The filenames must correspond to the the names in the zip archive.           
-    """
-
-
+"""
 
 
 class MDS3:
@@ -75,11 +71,11 @@ class MDS3:
         """Read and return data of the MDS-Dataset 'MDS-3 -- Cahn-Hilliard'
         
         The dataset consists of images of phase microstructures and the 
-        corresponding energie values obtained from simulations of the 
-        Cahn-Hilliard model. 
+        corresponding energie values obtained from altogether 18 simulations 
+        of the Cahn-Hilliard model. 
         
-        The images are stored in a ZIP archive and will be extracted to a list
-        of numpy arrays. There are 17866 images of 64x64 pixels in size.
+        The images are stored in a ZIP archive and will be extracted 'on the
+        fly'. There are 17866 images of 64x64 pixels in size.
         
         The microstructures-energy pairs were shuffled, i.e., they do not occur
         in the same order as the evolution of the simulation. If this is 
@@ -171,7 +167,7 @@ class MDS3:
 
 def main():
 
-    images, energies = MDS3.load_data(simulation_number=1, return_X_y=True, verbose=True)
+    images, energies = MDS3.load_data(simulation_number=17, return_X_y=True, verbose=True)
 
     idx = np.argsort(energies)
     energies = energies[idx]
