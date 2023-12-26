@@ -1,14 +1,14 @@
 [tool.poetry]
-name = "mdsdata"
-version = "0.1.0"
+name = "MDSdata"
+version = "0.1.1"
 description = "A package providing the datasets for the MDS-book."
 authors = ["Stefan Sandfeld <mds-book@proton.me>"]
 license = "MIT"
 readme = "README.md"
-homepage = "https://github.com/MDS-book/MDS-data"
+homepage = "https://github.com/MDS-book/"
 repository = "https://github.com/MDS-book/MDS-data"
 include = [
-    "LICENSE",
+    "LICENSE", 
 ]
 packages = [
     { include = "mdsdata" },
