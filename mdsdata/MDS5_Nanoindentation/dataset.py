@@ -3,9 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 from os.path import join
-from MDSdata._bunch import Bunch
-
-
+from mdsdata.bunch import Bunch
 
 
 DESCR = """
@@ -196,58 +194,3 @@ class MDS5:
             DESCR=DESCR,
         )
 
-
-
-def main():
-    dataset = MDS5.load_data()
-    X = dataset.feature_matrix
-    y = dataset.target 
-
-    print("The feature matrix has the shape:", X.shape)
-    print("The two features are:", dataset.feature_names)
-    print("The class label 0...3 correspond to the materials:", dataset.target_names)
-
-    
-    X, y = MDS5.load_data(return_X_y=True)
-
-
-    return
-
-    X, Y, feature_names, label_names = MDS5.data()
-    print("The feature matrix has the shape:", X.shape)
-    print("The class label 0...3 correspond to the materials:", label_names)
-
-    modulus = X[:, 0]
-    hardness = X[:, 1]
-    plt.scatter(modulus, hardness, c=Y, cmap='Paired_r')
-    plt.show()
-
-    #return 
-    fig, ax = plt.subplots(ncols=2, figsize=(9, 4))
-
-    modulus, hardness, _, _ = MDS5.data(material='Cr0', outlier=True)
-    ax[0].scatter(modulus, hardness, alpha=0.5)
-
-    modulus, hardness, _, _ = MDS5.data(material='Cr25', outlier=True)
-    ax[0].scatter(modulus, hardness, alpha=0.5)
-
-    modulus, hardness, _, _ = MDS5.data(material='Cr60', outlier=True)
-    ax[0].scatter(modulus, hardness, alpha=0.5)
-
-    modulus, hardness, _, _ = MDS5.data(material='Cr100', outlier=True)
-    ax[0].scatter(modulus, hardness, alpha=0.5)
-
-    # ------------------------------------------------
-    # list_of_E_and_H = MDS5.data(raw=False)
-    # materials = ['0% Cr', '25% Cr', '60% Cr', '100% Cr']
-    # for i, (modulus, hardness) in enumerate(list_of_E_and_H):
-    #     print(i)
-    #     ax[1].scatter(modulus, hardness, alpha=0.5, c=f'C{i}', label=materials[i])
-    # ax[1].legend()
-    
-    plt.show()
-
-    #print(np.array(list_of_E_and_H).shape)
-
-if __name__ == '__main__':
-    main()

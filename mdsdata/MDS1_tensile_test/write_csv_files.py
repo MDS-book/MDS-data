@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from MDSdata.MDS1_tensile_test.compute_strain_temperature_stress_data import TrueStressStrainTemperatureCurves
+from mdsdata.MDS1_tensile_test.compute_strain_temperature_stress_data import TrueStressStrainTemperatureCurves
 
 KSI_to_MPa = 345 / 50
 MPa_to_KSI = 1 / KSI_to_MPa

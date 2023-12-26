@@ -7,8 +7,8 @@ import os.path
 from os.path import join
 import matplotlib.pyplot as plt
 
-from MDSdata.io import get_CahnHilliard_images_and_energies
-from MDSdata._bunch import Bunch
+from mdsdata.io import get_CahnHilliard_images_and_energies
+from mdsdata.bunch import Bunch
 
 
 DESCR = """
@@ -162,27 +162,3 @@ class MDS3:
             frame = combined_frame,
             DESCR=DESCR,
         )
-
-
-
-def main():
-
-    images, energies = MDS3.load_data(simulation_number=17, return_X_y=True, verbose=True)
-
-    idx = np.argsort(energies)
-    energies = energies[idx]
-    images = images[idx]
-    n_images = images.shape[0]
-
-    fig, axes = plt.subplots(ncols=2, nrows=2, figsize=(8, 7),
-                             gridspec_kw={'hspace': 0.4, 'wspace': 0.3})
-    ax = axes.ravel()
-    
-    for i, idx in enumerate([0, n_images // 3, 2 * n_images // 3, n_images - 1]):
-        ax[i].imshow(images[idx])
-        ax[i].set(title=f"image no. {idx}: E={energies[idx]:.2f}")
-    plt.show()
-
-
-if __name__ == '__main__':
-    main()

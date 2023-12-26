@@ -4,26 +4,26 @@ from os.path import join
 import pandas as pd
 
 import matplotlib.pyplot as plt
-from MDSdata.io import get_Ising_images_temperatures_and_labels
-from MDSdata._bunch import Bunch
+from mdsdata.io import get_Ising_images_temperatures_and_labels
+from mdsdata.bunch import Bunch
 
 
 DESCR = """
-MDS-Dataset 'MDS-2 -- Ising Model'
-----------------------------------
+MDS-Dataset 'MDS-2 light -- Ising Model (small images)'
+-------------------------------------------------------
 
 **Dataset Characteristics:**
 
-    :Number of Instances: 5000 (2507 and 2493 for the two classes)
-    :Number of Attributes: 24096 numeric, predictive attributes and the class
+    :Number of Instances: 5000 (? and ? for the two classes)
+    :Number of Attributes: 256 numeric attributes and the class
     :Attribute Information: 
-        64x64 image of integer pixels in the range 0..255.
+        16x16 image of integer pixels in the range 0..255.
         - target: temperature value
         - class:
                 - 0: below Curie temperature
                 - 1: above Curie temperature
 
-    :Class Distribution: 2507 and 2493 for the two classes.
+    :Class Distribution: ? and ? for the two classes.
 
     :Creator: Sebastien Bompas, Stefan Sandfeld
 
@@ -34,8 +34,18 @@ MDS-Dataset 'MDS-2 -- Ising Model'
 """
 
 
-class MDS2:
-    """MDS-Dataset 'MDS-2 -- Ising Model'.
+# The absolute path is required when importing this package! Otherwise
+# a wrong relative path is resolved and reading a file from within this
+# script does not work properly. You can see this with
+# `print(os.path.dirname(os.path.abspath(__file__)))`
+p1 = join(os.path.dirname(os.path.abspath(__file__)), 'images_16.zip')
+p2 = join(os.path.dirname(os.path.abspath(__file__)), 'labels_16.csv')
+
+
+
+
+class MDS2_light:
+    """MDS-Dataset 'MDS-2 light -- Ising Model (small)'.
     
     The interface of the `data` method has been designed to conform closely
     with the well-established interface of scikit-learn (see 
@@ -50,15 +60,15 @@ class MDS2:
     # a wrong relative path is resolved and reading a file from within this
     # script does not work properly. You can see this with
     # `print(os.path.dirname(os.path.abspath(__file__)))`
-    p = join(os.path.dirname(os.path.abspath(__file__)), 'images_64.zip')
-    p2 = join(os.path.dirname(os.path.abspath(__file__)), 'labels_64.csv')
+    p1 = join(os.path.dirname(os.path.abspath(__file__)), 'images_16.zip')
+    p2 = join(os.path.dirname(os.path.abspath(__file__)), 'labels_16.csv')
     
     def __init__(self) -> None:
         pass 
 
     @staticmethod
     def load_data(*, return_X_y=False, as_frame=False, verbose=False):
-        """Read and return data of the MDS-Dataset 'MDS-2 -- Ising Model'
+        """Read and return data of the MDS-Dataset 'MDS-2 light -- Ising Model (smaller images)'
         
         The dataset consists of images of magnetic microstructures and the 
         corresponding temperature values obtained from simulations with
@@ -70,7 +80,7 @@ class MDS2:
 
         =================   ==============
         Records total                 5000
-        Dimensionality                4096
+        Dimensionality                256
         Features            integer, 0/255
         Targets             temperature: real (>0)
                             above_Tc: 0 or 1
@@ -94,8 +104,8 @@ class MDS2:
 
         images, temperatures, labels = \
             get_Ising_images_temperatures_and_labels(
-                zip_filename=MDS2.p, 
-                csv_filename=MDS2.p2,
+                zip_filename=MDS2_light.p1, 
+                csv_filename=MDS2_light.p2,
                 verbose=verbose
             )
         
@@ -123,25 +133,3 @@ class MDS2:
             frame=combined_frame,
             DESCR=DESCR,
         )
-
-
-def main():
-    images, targets = MDS2.load_data(return_X_y=True)
-    temperatures = targets[:, 0]
-    labels = np.array(targets[:, 1], dtype=int)
-    print(images.shape)
-    print(np.sum(labels == 0))
-    print(np.sum(labels == 1))
-
-    fig, axes = plt.subplots(ncols=2, nrows=2, figsize=(8, 7),
-                             gridspec_kw={'hspace': 0.4, 'wspace': 0.3})
-    ax = axes.ravel()
-    
-    for i, idx in enumerate([10, 1500, 3000, 4500]):
-        ax[i].imshow(images[idx])
-        ax[i].set(title=f"T={temperatures[idx]:.2f},  label={labels[idx]}")
-    plt.show()
-
-
-if __name__ == '__main__':
-    main()

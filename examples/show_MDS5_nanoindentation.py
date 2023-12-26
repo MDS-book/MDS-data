@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from MDSdata import MDS5
+from mdsdata import MDS5
 
 """ Usage of the MDS-dataset 'MDS-5: Nanoindentation'
 
@@ -24,7 +24,6 @@ def main():
     ax.scatter(modulus, hardness, c=material)
     ax.set(xlabel="Young's modulus [GPa]", ylabel="hardness [GPa]")
     plt.show()
-
 
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from MDSdata import MDS2
+from mdsdata import MDS2
 
 """ Usage of the MDS-dataset 'MDS-2: Ising model'
 
@@ -13,10 +13,14 @@ For further information and reference to the source of the
 data please refer to the MDS-book.
 """
 
+
 def main():
     images, targets = MDS2.load_data(return_X_y=True)
     temperatures = targets[:, 0]
     labels = np.array(targets[:, 1], dtype=int)
+    print("number of images:", images.shape)
+    print("number of images with label 0:", np.sum(labels == 0))
+    print("number of images with label 1:", np.sum(labels == 1))
 
     fig, axes = plt.subplots(ncols=2, nrows=2, figsize=(8, 7),
                              gridspec_kw={'hspace': 0.4, 'wspace': 0.3})

@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 from os.path import join
-from MDSdata._bunch import Bunch
+from mdsdata.bunch import Bunch
 
 
 
