@@ -15,7 +15,7 @@ MDS-Dataset 'MDS-2 -- Ising Model'
 **Dataset Characteristics:**
 
     :Number of Instances: 5000 (2507 and 2493 for the two classes)
-    :Number of Attributes: 24096 numeric attributes and the class
+    :Number of Attributes: 4096 numeric attributes and the class
     :Attribute Information: 
         64x64 image of integer pixels in the range 0..255.
         - target: temperature value
@@ -89,7 +89,7 @@ class MDS2:
             columns.
 
         verbose: bool, default=False
-            Enabl additional output and information during reading the data.
+            Enable additional output and information during reading the data.
         """
 
         images, temperatures, labels = \
