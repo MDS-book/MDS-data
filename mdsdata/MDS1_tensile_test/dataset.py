@@ -152,3 +152,9 @@ class MDS1:
             frame = combined_frame,
             DESCR=DESCR,
         )
+
+
+def load_tensile_test(temperature=600):
+    strain, stress = MDS1.load_data(temperature=temperature, 
+                                    return_X_y=True)
+    return strain, stress

@@ -175,3 +175,6 @@ class DS2:
         )
     
 
+def load_MNIST_digits(train=True):
+    images, labels = DS2().load_data(return_X_y=True, train=train)
+    return images, labels
