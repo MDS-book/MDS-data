@@ -6,5 +6,6 @@ from mdsdata.MDS4_chemical_elements.dataset import MDS4
 from mdsdata.MDS5_Nanoindentation.dataset import MDS5
 
 from mdsdata.DS2_MNIST.dataset import DS2, load_MNIST_digits
+from mdsdata.DS2_Alpaydin_digits.dataset import DS2_light, load_Alpaydin_digits
 
 
