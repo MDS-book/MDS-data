@@ -12,5 +12,11 @@ This is a package through which the example datasets of the MDS-book can be easi
 
 #### 0.1.2 (Jan 30, 2023)
 - remove temporary files
-- fix documentation
-- add MNIST dataset (DS-1)
+- add, edit and extent documentation of datasets
+- add MNIST dataset (DS-2)
+
+#### 0.1.3 ()
+- add "Alpaydin" NIST dataset (DS-2 light)
+- add function wrapper around (M)DS-x classes to provide intuitive 
+- refactor package structure
+

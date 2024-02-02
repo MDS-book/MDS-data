@@ -169,6 +169,15 @@ class MDS4:
 
 
 
+def load_elements():
+    """Returns features (the element properties) and targets (class labels metallic or non-metallic)
+        
+    See `MDS4.load_data` for more information
+    """
+    X, y = MDS4.load_data(return_X_y=True)
+
+    return X, y
+
 
 
 def main():
@@ -193,6 +202,7 @@ def main():
     plt.tight_layout()
     #plt.show()
     plt.savefig('chemelem.png', pad_inches=0.1, bbox_inches='tight')
+
 
 if __name__ == '__main__':
     main()

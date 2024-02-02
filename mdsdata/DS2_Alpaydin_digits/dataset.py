@@ -157,6 +157,6 @@ class DS2_light:
         )
 
 
-def load_Alpaydin_digits(train=True):
+def load_Alpaydin_digits():
     images, labels = DS2_light().load_data(return_X_y=True)
     return images, labels

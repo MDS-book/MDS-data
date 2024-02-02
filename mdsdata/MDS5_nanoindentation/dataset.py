@@ -72,15 +72,15 @@ class MDS5:
     # a wrong relative path is resolved and reading a file from within this
     # script does not work properly. You can see this with
     # `print(os.path.dirname(os.path.abspath(__file__)))`
-    p0 = join(os.path.dirname(os.path.abspath(__file__)), 'Cr0_full.csv')  
-    p25 = join(os.path.dirname(os.path.abspath(__file__)), 'Cr25_full.csv')
-    p60 = join(os.path.dirname(os.path.abspath(__file__)), 'Cr60_full.csv')
-    p100 = join(os.path.dirname(os.path.abspath(__file__)), 'Cr100_full.csv') 
+    p0 = join(os.path.dirname(os.path.abspath(__file__)), 'data/Cr0_full.csv')  
+    p25 = join(os.path.dirname(os.path.abspath(__file__)), 'data/Cr25_full.csv')
+    p60 = join(os.path.dirname(os.path.abspath(__file__)), 'data/Cr60_full.csv')
+    p100 = join(os.path.dirname(os.path.abspath(__file__)), 'data/Cr100_full.csv') 
 
-    p0red = join(os.path.dirname(os.path.abspath(__file__)), 'Cr0_reduced.csv')  
-    p25red = join(os.path.dirname(os.path.abspath(__file__)), 'Cr25_reduced.csv')
-    p60red = join(os.path.dirname(os.path.abspath(__file__)), 'Cr60_reduced.csv')
-    p100red = join(os.path.dirname(os.path.abspath(__file__)), 'Cr100_reduced.csv') 
+    p0red = join(os.path.dirname(os.path.abspath(__file__)), 'data/Cr0_reduced.csv')  
+    p25red = join(os.path.dirname(os.path.abspath(__file__)), 'data/Cr25_reduced.csv')
+    p60red = join(os.path.dirname(os.path.abspath(__file__)), 'data/Cr60_reduced.csv')
+    p100red = join(os.path.dirname(os.path.abspath(__file__)), 'data/Cr100_reduced.csv') 
 
     def __init__(self) -> None:
         pass
@@ -194,3 +194,19 @@ class MDS5:
             DESCR=DESCR,
         )
 
+
+def load_indentation():
+    """Returns features (youngs modulus and hardness) and targets 
+    (class: 0-3, i.e. '0% Cr', '25% Cr', '60% Cr', '100% Cr')
+    
+    Outlier are already removed.
+    See `MDS5.load_data` for more information
+    """
+    CuCr = MDS5.load_data(outlier=True)
+    X = CuCr.feature_matrix
+    y = CuCr.target 
+    modulus = X[:, 0]
+    hardness = X[:, 1]
+    material = y
+    
+    return modulus, hardness, material

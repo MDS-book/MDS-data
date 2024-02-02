@@ -133,3 +133,15 @@ class MDS2_light:
             frame=combined_frame,
             DESCR=DESCR,
         )
+
+
+def load_Ising_light():
+    """Returns features (the images), labels (0/1 for below/above Tc) and temperature
+    
+    See `MDS2.load_data` for more information
+    """
+    images, targets = MDS2_light.load_data(return_X_y=True)
+    temperatures = targets[:, 0]
+    labels = np.array(targets[:, 1], dtype=int)
+
+    return images, labels, temperatures

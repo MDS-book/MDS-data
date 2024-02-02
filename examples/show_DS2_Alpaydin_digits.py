@@ -1,11 +1,12 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from mdsdata import DS2_light
+from mdsdata import DS2_light, load_Alpaydin_digits
 
 
 
 def main():
     images, labels = DS2_light().load_data(return_X_y=True)
+    images, labels = load_Alpaydin_digits()
     
     print("number of images:", images.shape[0])
     print("number of images per digit: ", end='')

@@ -60,7 +60,7 @@ class MDS3:
     # a wrong relative path is resolved and reading a file from within this
     # script does not work properly. You can see this with
     # `print(os.path.dirname(os.path.abspath(__file__)))`
-    p = join(os.path.dirname(os.path.abspath(__file__)), '')
+    p = join(os.path.dirname(os.path.abspath(__file__)), 'data')
 
     def __init__(self) -> None:
         pass
@@ -90,8 +90,9 @@ class MDS3:
 
         Parameters
         ----------
-        simulation_number: if given (as int or list of ints), then only these 
-            simulations will be read. Otherwise, all 18 simulations will be read.
+        simulation_number: (0..17) if given (as int or list of ints), then only these 
+            simulations will be read. Otherwise, all 18 simulations will be read
+            and returned.
 
         return_X_y : bool, default=False
             If True, returns ``(data, target)`` instead of a 
@@ -162,3 +163,17 @@ class MDS3:
             frame = combined_frame,
             DESCR=DESCR,
         )
+
+
+def load_CahnHilliard(simulation_number=-1):
+    """Returns features (the images) and targets (energies)
+        
+    See `MDS3.load_data` for more information
+
+    :param simulation_number:  if given (as int or list of ints), then only these 
+            simulations will be read. Otherwise, all 18 simulations will be read
+            and returned.
+    """
+    images, energies = MDS3.load_data(simulation_number=simulation_number, return_X_y=True)
+
+    return images, energies
