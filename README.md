@@ -21,7 +21,3 @@ This is a package through which the example datasets of the MDS-book can be easi
 
 #### 0.1.0 (Dec 26, 2023)
 - first release
-
-
-
-
