@@ -171,21 +171,46 @@ class MDS4:
 
 def load_elements():
     """Returns features (the element properties) and targets (class labels metallic or non-metallic)
-        
+    
+    The label is 0 (="metallic") or 1 (='non-metallic')
     See `MDS4.load_data` for more information
     """
-    X, y = MDS4.load_data(return_X_y=True)
+    data = MDS4.load_data()
+    X = data.feature_matrix
+    label = data.target
+    features_names = data.feature_names
+    
+    atomic_radius = X[:, features_names == 'atomic_radius'].ravel()
+    electron_affinity = X[:, features_names == 'electron_affinity'].ravel()
+    ionization_energy = X[:, features_names == 'ionization_energy'].ravel()
+    electronegativity = X[:, features_names == 'electronegativity'].ravel()
 
-    return X, y
+    return atomic_radius, electron_affinity, ionization_energy, electronegativity, label
 
 
 
 def main():
 
+
     data = MDS4.load_data()
     X = data.feature_matrix
     y = data.target
     features_names = data.feature_names
+    
+    atomic_radius = X[:, features_names == 'atomic_radius'].ravel()
+    electron_affinity = X[:, features_names == 'electron_affinity'].ravel()
+    ionization_energy = X[:, features_names == 'ionization_energy'].ravel()
+    electronegativity = X[:, features_names == 'electronegativity'].ravel()
+
+    print(X)
+    print(electron_affinity)
+    return 
+
+    data = MDS4.load_data()
+    X = data.feature_matrix
+    y = data.target
+    features_names = data.feature_names
+
 
     atomic_radius = X[:, features_names == 'atomic_radius']
     electron_affinity = X[:, features_names == 'electron_affinity']

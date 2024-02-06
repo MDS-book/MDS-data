@@ -6,6 +6,10 @@ This is a package through which the example datasets of the MDS-book can be easi
 
 ## Change Log
 
+#### 0.1.4 (, 2024)
+- fine tune the wrapper function `load_...()`
+
+
 #### 0.1.3 (Feb 2, 2024)
 - add "Alpaydin" NIST dataset (DS-2 light)
 - add function wrapper around (M)DS-x classes to provide intuitive 
