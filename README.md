@@ -8,7 +8,8 @@ This is a package through which the example datasets of the MDS-book can be easi
 
 #### 0.1.4 (, 2024)
 - fine tune the wrapper function `load_...()`
-
+- add Iris dataset (DS-1) and Fisher-1936 paper
+- adapt show_MDS4_chemical_elements.py 
 
 #### 0.1.3 (Feb 2, 2024)
 - add "Alpaydin" NIST dataset (DS-2 light)
