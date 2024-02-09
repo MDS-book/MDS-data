@@ -174,6 +174,8 @@ def load_elements():
     
     The label is 0 (="metallic") or 1 (='non-metallic')
     See `MDS4.load_data` for more information
+
+    :returns: atomic_radius, electron_affinity, ionization_energy, electronegativity, label
     """
     data = MDS4.load_data()
     X = data.feature_matrix
