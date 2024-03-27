@@ -122,9 +122,6 @@ class DS2_light:
         targets = images[:,-1]
         images = images[:, :-1]
 
-        print(images)
-        print(targets)
-        #return
         if verbose:
             print(images_train.shape)
             print(images_test.shape)
