@@ -185,7 +185,7 @@ class DS1:
 
 
 def load_iris():
-    """Returns features (the element properties) and targets (class labels metallic or non-metallic)
+    """Returns features (the element properties) and targets (species_id 0...2)
         
     See `DS1.load_data` for more information
     """
