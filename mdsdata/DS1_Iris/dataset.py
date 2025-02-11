@@ -84,7 +84,7 @@ class DS1:
 
     @staticmethod
     def load_data(*, return_X_y=False, as_frame=False):
-        """Read and return data of the MDS-dataset 'MDS-4: Chemical Elements'.
+        """Read and return data of the MDS-dataset 'DS-1: Iris flowers'.
 
         Classification of three different types if Iris plants based on four
         measurements of the size of the petals and sepals.

@@ -6,7 +6,12 @@ This is a package through which the example datasets of the MDS-book can be easi
 
 ## Change Log
 
-#### 0.1.4 (, 2024)
+### 0.1.5 (Feb 11, 2025)
+- remove unnecessary print output from Alpydin DS
+- bugfix 
+- fix typo in iris docstring
+
+#### 0.1.4 (Feb 09, 2024)
 - fine tune the wrapper function `load_...()`
 - add Iris dataset (DS-1) and Fisher-1936 paper
 - adapt show_MDS4_chemical_elements.py 
