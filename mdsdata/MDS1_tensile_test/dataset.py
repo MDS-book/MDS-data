@@ -97,8 +97,8 @@ class MDS1:
         Parameters
         ----------
         temperature: integer, default=0
-            Possible values: 0, 400, 600 denote the temperature in
-            degreees Celsiu.
+            Possible values: 0, 400, 600 which denote the temperature in
+            degrees Celsius.
 
         return_X_y: bool, default=False
             If True, returns ``(data, target)`` instead of a 
@@ -154,7 +154,35 @@ class MDS1:
         )
 
 
-def load_tensile_test(temperature=600):
+def load_tensile_test(temperature=600, size=None):
+    """Return data of the MDS-Dataset 'MDS-1 -- Tensile-Test'
+
+    This is a convenience function based on the class `MDS-1` (for more details
+    see the documentation of that class).  This function can return a subset of 
+    the shuffled data. Because this is implemented in terms of `np.random.shuffle` 
+    initializing the random number generator outside this function determines its 
+    random seed.
+
+    Parameters
+    ----------
+    temperature : int, default=600
+        Possible values: 0, 400, 600 denoting the temperature in
+            degrees Celsius.
+
+    size : int, default=None
+        If size is given, a shuffled subset of the dataset is returned. size must
+        be less or equal than the total number of available data records.
+    """
+        
     strain, stress = MDS1.load_data(temperature=temperature, 
                                     return_X_y=True)
+    
+    if size is not None:
+        n_records = strain.shape[0]
+        assert size <= n_records, f"parameter 'size' can be max. {n_records}"
+        indices = np.arange(n_records)
+        np.random.shuffle(indices)
+        indices = indices[:size]
+        return strain[indices], stress[indices]
+
     return strain, stress

@@ -157,8 +157,9 @@ class DS2_light:
 def load_Alpaydin_digits(size=None):
     """Returns images and labels from MDS-Dataset 'DS-2 light' ("Alpaydin handwritten digits").
 
-    This is a convenience function based on the class `DS2_light`. It additionally can 
-    return a subset of the shuffled data. Because this is implemented in terms of
+    This is a convenience function based on the class `DS2_light` (see `DS2_light.load_data` 
+    for more information). This function can also return only a subset of a shuffled version
+    of the dataset. Because this is implemented in terms of
     `np.random.shuffle` initializing the random number generator outside this function
     determines its random seed.
 
@@ -172,7 +173,7 @@ def load_Alpaydin_digits(size=None):
 
     if size is not None:
         n_records = images.shape[0]
-        assert size <= n_records, f"parameter size can be max. {n_records}"
+        assert size <= n_records, f"parameter 'size' can be max. {n_records}"
         indices = np.arange(n_records)
         np.random.shuffle(indices)
         indices = indices[:size]

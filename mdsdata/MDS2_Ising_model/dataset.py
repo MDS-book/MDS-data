@@ -125,13 +125,31 @@ class MDS2:
         )
 
 
-def load_Ising():
+def load_Ising(size=None):
     """Returns features (the images), labels (0/1 for below/above Tc) and temperature
     
-    See `MDS2.load_data` for more information
+    This is a convenience function based on the class MDS2 (see `MDS2.load_data` 
+    for more information). This function can also return only a subset of a
+    shuffled version of the dataset. Because this is implemented in terms of
+    `np.random.shuffle` initializing the random number generator outside this function
+    determines its random seed.
+
+    Parameters
+    ----------
+    size : int, default=None
+        If size is given, a shuffled subset of the dataset is returned. size must
+        be less or equal than the total number of available data records.
     """
     images, targets = MDS2.load_data(return_X_y=True)
     temperatures = targets[:, 0]
     labels = np.array(targets[:, 1], dtype=int)
+
+    if size is not None:
+        n_records = images.shape[0]
+        assert size <= n_records, f"parameter 'size' can be max. {n_records}"
+        indices = np.arange(n_records)
+        np.random.shuffle(indices)
+        indices = indices[:size]
+        return images[indices], labels[indices], temperatures[indices]
 
     return images, labels, temperatures

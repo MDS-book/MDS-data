@@ -6,7 +6,7 @@ This is a package through which the example datasets of the MDS-book can be easi
 
 ## Change Log
 
-#### (Feb 11, 2025)
+#### (Feb 12, 2025)
 - add size parameter to load_MNIST_digits and load_Alpaydin_digits, 
   returning a shuffled subset of data
 

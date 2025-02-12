@@ -165,15 +165,35 @@ class MDS3:
         )
 
 
-def load_CahnHilliard(simulation_number=-1):
-    """Returns features (the images) and targets (energies)
+def load_CahnHilliard(simulation_number=-1, size=None):
+    """Returns features (the images) and targets (energies) of the Cahn-Hillard dataset.
         
-    See `MDS3.load_data` for more information
+    This is a convenience function based on the class MDS3 (see `MDS3.load_data` 
+    for more information). This function can also return only a subset of a
+    shuffled version of the dataset. Because this is implemented in terms of
+    `np.random.shuffle` initializing the random number generator outside this function
+    determines its random seed.
 
-    :param simulation_number:  if given (as int or list of ints), then only these 
-            simulations will be read. Otherwise, all 18 simulations will be read
-            and returned.
+    Parameters
+    ----------
+
+    simulation_number: int, default=-1 (all 18 simulations)
+        if given (as int or list of ints), then only these simulations will be read. 
+        Otherwise, all 18 simulations will be read and returned.
+                
+    size : int, default=None
+        If size is given, a shuffled subset of the dataset is returned. size must
+        be less or equal than the total number of available data records.
+
     """
     images, energies = MDS3.load_data(simulation_number=simulation_number, return_X_y=True)
+
+    if size is not None:
+        n_records = images.shape[0]
+        assert size <= n_records, f"parameter 'size' can be max. {n_records}"
+        indices = np.arange(n_records)
+        np.random.shuffle(indices)
+        indices = indices[:size]
+        return images[indices], energies[indices]
 
     return images, energies
