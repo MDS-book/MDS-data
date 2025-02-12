@@ -6,7 +6,11 @@ This is a package through which the example datasets of the MDS-book can be easi
 
 ## Change Log
 
-### 0.1.5 (Feb 11, 2025)
+#### (Feb 11, 2025)
+- add size parameter to load_MNIST_digits and load_Alpaydin_digits, 
+  returning a shuffled subset of data
+
+#### 0.1.5 (Feb 11, 2025)
 - remove unnecessary print output from Alpydin DS
 - bugfix 
 - fix typo in iris docstring

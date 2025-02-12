@@ -175,6 +175,28 @@ class DS2:
         )
     
 
-def load_MNIST_digits(train=True):
+def load_MNIST_digits(train=True, size=None):
+    """Returns images and labels from MDS-Dataset 'DS-2' ("MNIST handwritten digits").
+
+    This is a convenience function based on the class `DS2`. It additionally can 
+    return a subset of the shuffled data. Because this is implemented in terms of
+    `np.random.shuffle` initializing the random number generator outside this function
+    determines its random seed.
+
+    Parameters
+    ----------
+    size : int, default=None
+        If size is given, a shuffled subset of the dataset is returned. size must
+        be less or equal than the total number of available data records.
+    """
     images, labels = DS2().load_data(return_X_y=True, train=train)
+
+    if size is not None:
+        n_records = images.shape[0]
+        assert size <= n_records, f"parameter size can be max. {n_records}"
+        indices = np.arange(n_records)
+        np.random.shuffle(indices)
+        indices = indices[:size]
+        return images[indices], labels[indices]
+    
     return images, labels
